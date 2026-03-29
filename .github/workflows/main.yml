@@ -44,17 +44,21 @@ jobs:
           INCIDENT_PASS: ${{ secrets.snow_pass }}
         run: |
           echo "Creating incident for failed task: ${{ github.job }}"
+          cat <<EOF > payload.json
+          {
+            "description": "Pipeline failure details:\n${{ env.TEST_FAILURE_SUMMARY }}",
+            "assignment_group": "2dfcd6af83f73610d05fc4b6feaad3f4",
+            "caller_id": "858c1a6f83f73610d05fc4b6feaad3cd",
+            "short_description": "Failure in ${{ github.repository }}",
+            \"work_notes\": \"Workflow URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
+            "urgency": "2",
+            "impact": "2"
+          }
+          EOF
+          
           curl --request POST \
             --url "https://dev273137.service-now.com/api/now/table/incident" \
             --header "Accept: application/json" \
             --header "Content-Type: application/json" \
             --user "admin:$INCIDENT_PASS" \
-            --data "{
-              \"description\": \"Pipeline failure details: ${{ env.TEST_FAILURE_SUMMARY }}\",
-              \"assignment_group\": \"2dfcd6af83f73610d05fc4b6feaad3f4\",
-              \"caller_id\": \"858c1a6f83f73610d05fc4b6feaad3cd\",
-              \"short_description\": \"Failure in ${{ github.repository }} - Job: ${{ github.job }}\",
-              \"urgency\": \"2\",
-              \"impact\": \"2\",
-              \"work_notes\": \"Workflow URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"
-            }"
+            --data @payload.json
