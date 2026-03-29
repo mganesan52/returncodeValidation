@@ -1,0 +1,11 @@
+---
+name: Valdiation play
+hosts: localhost
+vars:
+  - service_name: spooler
+
+tasks:
+  - name: Validate windows service
+    ansible.builtin.win_service:
+       name: "{{ service_name }}"
+       state: running
