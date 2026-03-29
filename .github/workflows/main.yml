@@ -27,7 +27,6 @@ jobs:
 
       - name: Run Tests
         id: run_tests
-        continue-on-error: true
         run: |
           export PYTHONPATH=$PYTHONPATH:${{ github.workspace }}/src
           pytest --tb=short . 2>&1 | tee full_output.log
