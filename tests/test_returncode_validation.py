@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch, MagicMock
-from src.validator import statusvalidator, portvalidator
+from validator import statusvalidator, portvalidator
 
 def test_statusvalidator_success():
     # We "mock" requests.get so it doesn't actually hit the internet
