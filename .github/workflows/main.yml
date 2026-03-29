@@ -30,15 +30,28 @@ jobs:
           export PYTHONPATH=$PYTHONPATH:${{ github.workspace }}/src
           pytestot
         working-directory: tests
-
-      - name: Create Incident on Failure
-        if: failure()
+      
+      - name: Run Tests
+        id: run_tests
+        continue-on-error: true
         run: |
-          # Extract the last 20 lines of the test results (where the failures are listed)
-          FAILURE_DETAILS=$(tail -n 20 test_results.txt)
-          
-          echo "Creating incident for failed task: ${{ github.job }}"
+          export PYTHONPATH=$PYTHONPATH:${{ github.workspace }}/src
+          TEST_LOG=$(pytest --tb=short tests 2>&1)
+          EXIT_CODE=$?
 
+          echo "TEST_FAILURE_SUMMARY<<EOF" >> $GITHUB_ENV
+          echo "$TEST_LOG" | tail -n 20 >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          
+          # Exit with the original pytest code so the job status is correct
+          exit $EXIT_CODE
+
+      - name: Create Incident
+        if: steps.run_tests.outcome == 'failure'
+        run: |
+          echo "Incident for Task: ${{ github.job }}"
+          echo "Failure Details from Variable:"
+          echo "$TEST_FAILURE_SUMMARY"
           curl "https://dev273137.service-now.com/api/now/table/incident" \
             --request POST \
             --header "Accept:application/json" \
