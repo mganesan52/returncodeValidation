@@ -28,5 +28,20 @@ jobs:
       - name: Run Tests
         run: |
           export PYTHONPATH=$PYTHONPATH:${{ github.workspace }}/src
-          pytest
+          pytestot
         working-directory: tests
+
+      - name: Create Incident on Failure
+        if: failure()
+        run: |
+          # Extract the last 20 lines of the test results (where the failures are listed)
+          FAILURE_DETAILS=$(tail -n 20 test_results.txt)
+          
+          echo "Creating incident for failed task: ${{ github.job }}"
+
+          curl "https://dev273137.service-now.com/api/now/table/incident" \
+            --request POST \
+            --header "Accept:application/json" \
+            --header "Content-Type:application/json" \
+            --data "{'short_description':"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\",'urgency':'2','impact':'2'}" \
+            --user 'admin':'0-xcVC1^qRPs'
