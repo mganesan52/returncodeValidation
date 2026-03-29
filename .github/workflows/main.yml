@@ -32,10 +32,10 @@ jobs:
           export PYTHONPATH=$PYTHONPATH:${{ github.workspace }}/src
           pytest --tb=short . 2>&1 | tee full_output.log
           EXIT_CODE=${PIPESTATUS[0]}
-          echo \"TEST_FAILURE_SUMMARY<<EOF\" >> $GITHUB_ENV
+          echo "TEST_FAILURE_SUMMARY<<EOF" >> $GITHUB_ENV
           tail -n 20 full_output.log >> $GITHUB_ENV
-          echo \"EOF\" >> $GITHUB_ENV
-          echo \"PYTEST_EXIT_CODE=$EXIT_CODE\" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "PYTEST_EXIT_CODE=$EXIT_CODE" >> $GITHUB_ENV
           exit $EXIT_CODE
         working-directory: tests
       
