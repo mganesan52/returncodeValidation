@@ -28,7 +28,7 @@ jobs:
       - name: Run Tests
         run: |
           export PYTHONPATH=$PYTHONPATH:${{ github.workspace }}/src
-          pytestot
+          pytest
         working-directory: tests
       
       - name: Create Incident on Failure
