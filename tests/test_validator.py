@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mocked import patch, MagicMock
 from validator import statusvalidator, portvalidator
 
 def test_statusvalidator_success():
