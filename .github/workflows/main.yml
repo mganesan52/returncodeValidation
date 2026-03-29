@@ -21,9 +21,20 @@ jobs:
           pip install pytest
 
       - name: Lint YAML files
+        id: yaml_lint
         uses: ibiqlik/action-yamllint@v3
         with:
           file_or_dir: src
+      
+      - name: Capture Lint Failures
+        if: failure() && steps.yaml_lint.outcome == 'failure'
+        run: |
+          echo "Capturing YamlLint errors..."
+          LINT_OUTPUT=$(yamllint src 2>&1 || true)
+          echo "TEST_FAILURE_SUMMARY<<EOF" >> $GITHUB_ENV
+          echo "YAML Lint Failed:" >> $GITHUB_ENV
+          echo "$LINT_OUTPUT" | tail -n 20 >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       - name: Run Tests
         id: run_tests
