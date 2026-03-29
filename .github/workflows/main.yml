@@ -31,8 +31,6 @@ jobs:
           pytestot
         working-directory: tests
 
-  
-      
       - name: Create Incident on Failure
         if: failure()
         run: |
@@ -42,5 +40,5 @@ jobs:
             --request POST \
             --header "Accept:application/json" \
             --header "Content-Type:application/json" \
-            --data "{\"assignment_group\": \"2dfcd6af83f73610d05fc4b6feaad3f4\",\"caller\": \"858c1a6f83f73610d05fc4b6feaad3cd\", \"short_description\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\",\"urgency\":\"2\",\"impact\":\"2\"}" \
+            --data "{"description": "", \"assignment_group\": \"2dfcd6af83f73610d05fc4b6feaad3f4\",\"caller_id\": \"858c1a6f83f73610d05fc4b6feaad3cd\", \"short_description\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\",\"urgency\":\"2\",\"impact\":\"2\"}" \
             --user 'admin':'0-xcVC1^qRPs'
