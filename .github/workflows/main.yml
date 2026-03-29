@@ -27,8 +27,13 @@ jobs:
 
       - name: Run Tests
         run: |
-          export PYTHONPATH=$PYTHONPATH:${{ github.workspace }}/src
-          pytest
+            export PYTHONPATH=$PYTHONPATH:${{ github.workspace }}/src
+            TEST_LOG=$(pytest --tb=short tests 2>&1)
+            EXIT_CODE=$?
+            echo "TEST_FAILURE_SUMMARY<<EOF" >> $GITHUB_ENV
+            echo "$TEST_LOG" | tail -n 20 >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+            exit $EXIT_CODE
         working-directory: tests
       
       - name: Create Incident on Failure
