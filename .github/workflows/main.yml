@@ -42,5 +42,5 @@ jobs:
             --request POST \
             --header "Accept:application/json" \
             --header "Content-Type:application/json" \
-            --data "{'short_description':"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\",'urgency':'2','impact':'2'}" \
+            --data "{\"short_description\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\",\"urgency\":\"2\",\"impact\":\"2\"}" \
             --user 'admin':'0-xcVC1^qRPs'
