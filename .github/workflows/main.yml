@@ -33,6 +33,8 @@ jobs:
 
       - name: Create Incident on Failure
         if: failure()
+        env:
+          INCIDENT_PASS: ${{ secrets.snow_pass }}
         run: |
           echo "Creating incident for failed task: ${{ github.job }}"
           curl "https://dev273137.service-now.com/api/now/table/incident" \
@@ -40,4 +42,4 @@ jobs:
             --header "Accept:application/json" \
             --header "Content-Type:application/json" \
             --data "{\"description\": \"\", \"assignment_group\": \"2dfcd6af83f73610d05fc4b6feaad3f4\",\"caller_id\": \"858c1a6f83f73610d05fc4b6feaad3cd\", \"short_description\":\"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\",\"urgency\":\"2\",\"impact\":\"2\"}" \
-            --user 'admin':'0-xcVC1^qRPs'
+            --user 'admin': \"$INCIDENT_PASS\"
